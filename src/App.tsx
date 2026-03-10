@@ -18,18 +18,14 @@ import SignupPage from "./pages/SignupPage.tsx";
 const queryClient = new QueryClient();
 
 const AppContent = () => {
-  const { currentView } = useAppView();
+  const { currentView, shopViewVersion } = useAppView();
 
   useEffect(() => {
-    if (!currentView) {
-      return;
-    }
-
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [currentView]);
+  });
 
   const pages = {
-    shop: <Index />,
+    shop: <Index key={shopViewVersion} />,
     cart: <CartPage />,
     login: <LoginPage />,
     signup: <SignupPage />,

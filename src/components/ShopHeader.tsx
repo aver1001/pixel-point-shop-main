@@ -31,7 +31,7 @@ const ShopHeader = () => {
     <header className="sticky top-0 z-50 bg-card border-b-[3px] border-border">
       <div className="container flex items-center justify-between h-16 sm:h-20 px-4 gap-3">
         {/* Logo */}
-        <button type="button" onClick={() => openView("shop")} className="flex items-center gap-2 min-w-0 hover:opacity-90 transition-opacity">
+        <button type="button" onClick={() => openView("shop", { resetShop: true })} className="flex items-center gap-2 min-w-0 hover:opacity-90 transition-opacity">
           <span className="text-pixel-pink text-lg">✦</span>
           <h1 className="font-pixel text-[16px] sm:text-[20px] text-foreground leading-none whitespace-nowrap">
             AZEL POINT <span className="text-pixel-pink">SHOP</span>
@@ -40,13 +40,17 @@ const ShopHeader = () => {
 
         <div className="flex items-center gap-2 sm:gap-4">
           {/* Points */}
-          <div className="flex items-center gap-1.5 bg-deep-void px-3 py-1.5 border-2 border-border">
+          <button
+            type="button"
+            onClick={() => openView("my")}
+            className="flex items-center gap-1.5 bg-deep-void px-3 py-1.5 border-2 border-border hover:border-pixel-pink transition-colors"
+          >
             <Star className="w-3.5 h-3.5 text-pixel-yellow fill-pixel-yellow" />
             <span className="font-pixel text-[12px] sm:text-[14px] text-foreground">
               {points.toLocaleString()}
             </span>
             <span className="font-body text-[12px] text-muted-foreground ml-0.5">P</span>
-          </div>
+          </button>
 
           <DropdownMenu modal={false} open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <DropdownMenuTrigger asChild>
