@@ -90,17 +90,17 @@ const ProductCard = ({
           <div className="flex items-baseline gap-1.5 flex-wrap content-start">
             <div className="flex items-baseline gap-1.5">
               {discount > 0 && (
-                <span className="font-pixel text-[11px] text-pixel-pink">
+                <span className="font-pixel text-[12px] text-pixel-pink">
                   {discount}%
                 </span>
               )}
-              <span className="font-pixel text-[12px] sm:text-[14px] text-foreground">
+              <span className="font-pixel text-[14px] sm:text-[16px] text-foreground">
                 {product.price.toLocaleString()}
               </span>
-              <span className="font-body text-[11px] text-muted-foreground">P</span>
+              <span className="font-body text-[12px] text-muted-foreground">P</span>
             </div>
             {product.originalPrice && (
-              <p className="font-body text-[11px] text-muted-foreground line-through">
+              <p className="font-body text-[12px] text-muted-foreground line-through">
                 {product.originalPrice.toLocaleString()} P
               </p>
             )}

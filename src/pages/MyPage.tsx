@@ -64,7 +64,7 @@ const MyPage = () => {
             <p className="font-body text-[12px] text-muted-foreground">남은 포인트</p>
             <div className="mt-2 flex items-center gap-2">
               <Star className="h-4 w-4 text-pixel-yellow fill-pixel-yellow" />
-              <p className="font-pixel text-[14px] sm:text-[16px] text-foreground">{points.toLocaleString()} P</p>
+              <p className="font-pixel text-[16px] sm:text-[18px] text-foreground">{points.toLocaleString()} P</p>
             </div>
           </article>
           <article className="border-[3px] border-border bg-card p-4">
@@ -73,7 +73,7 @@ const MyPage = () => {
           </article>
           <article className="border-[3px] border-border bg-card p-4">
             <p className="font-body text-[12px] text-muted-foreground">누적 결제 포인트</p>
-            <p className="mt-2 font-pixel text-[14px] sm:text-[16px] text-foreground">{totalSpent.toLocaleString()} P</p>
+            <p className="mt-2 font-pixel text-[16px] sm:text-[18px] text-foreground">{totalSpent.toLocaleString()} P</p>
           </article>
         </section>
 
@@ -82,11 +82,11 @@ const MyPage = () => {
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="border-[3px] border-border bg-deep-void p-4">
               <p className="font-body text-[12px] text-muted-foreground">결제로 사용한 포인트</p>
-              <p className="mt-2 font-pixel text-[14px] sm:text-[16px] text-foreground">{totalSpent.toLocaleString()} P</p>
+              <p className="mt-2 font-pixel text-[16px] sm:text-[18px] text-foreground">{totalSpent.toLocaleString()} P</p>
             </div>
             <div className="border-[3px] border-border bg-deep-void p-4">
               <p className="font-body text-[12px] text-muted-foreground">현재 남은 포인트</p>
-              <p className="mt-2 font-pixel text-[14px] sm:text-[16px] text-foreground">{points.toLocaleString()} P</p>
+              <p className="mt-2 font-pixel text-[16px] sm:text-[18px] text-foreground">{points.toLocaleString()} P</p>
             </div>
           </div>
         </section>

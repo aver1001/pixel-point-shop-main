@@ -46,10 +46,10 @@ const ShopHeader = () => {
             className="flex items-center gap-1.5 bg-deep-void px-3 py-1.5 border-2 border-border hover:border-pixel-pink transition-colors"
           >
             <Star className="w-3.5 h-3.5 text-pixel-yellow fill-pixel-yellow" />
-            <span className="font-pixel text-[12px] sm:text-[14px] text-foreground">
+            <span className="font-pixel text-[14px] sm:text-[16px] text-foreground">
               {points.toLocaleString()}
             </span>
-            <span className="font-body text-[12px] text-muted-foreground ml-0.5">P</span>
+            <span className="ml-0.5 font-body text-[13px] text-muted-foreground">P</span>
           </button>
 
           <DropdownMenu modal={false} open={isMenuOpen} onOpenChange={setIsMenuOpen}>

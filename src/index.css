@@ -200,6 +200,45 @@
     animation: toast-slide-out-right 0.24s ease-in forwards;
   }
 
+  .shop-toast[data-type="success"] [data-icon] {
+    color: #22c55e;
+    background: transparent;
+    border: 0;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .shop-toast[data-type="success"] [data-icon] > svg {
+    color: #22c55e;
+    stroke: #22c55e;
+    width: 1.55rem !important;
+    height: 1.55rem !important;
+    margin: 0 !important;
+    transform: scale(1.14);
+    transform-origin: center;
+  }
+
+  .shop-toast[data-type="success"] [data-icon] .sonner-loading-wrapper {
+    display: none;
+  }
+
+  .shop-toast[data-type="success"] [data-content] {
+    width: 100%;
+    text-align: center;
+  }
+
+  .shop-toast[data-type="success"] [data-title],
+  .shop-toast[data-type="success"] [data-description] {
+    text-align: center;
+  }
+
   .announcement-marquee-track {
     display: flex;
     width: max-content;

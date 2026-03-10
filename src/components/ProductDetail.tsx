@@ -22,7 +22,7 @@ const ProductDetail = ({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4"
       style={{ animation: "overlay-in 0.2s ease-out forwards" }}
     >
       {/* Overlay */}
@@ -35,7 +35,7 @@ const ProductDetail = ({
 
       {/* Modal */}
       <div
-        className="relative bg-card border-[3px] border-border w-full sm:w-[480px] sm:max-h-[90vh] max-h-[85vh] overflow-y-auto"
+        className="relative w-full max-w-[480px] max-h-[90vh] overflow-y-auto border-[3px] border-border bg-card"
         style={{ animation: "modal-in 0.3s ease-out forwards" }}
       >
         {/* Close Button */}
@@ -90,13 +90,34 @@ const ProductDetail = ({
         {/* Content */}
         <div className="p-5 sm:p-6 space-y-5">
           {/* Name */}
-          <div>
-            <h2 className="font-pixel text-[12px] sm:text-[14px] text-foreground mb-1">
-              {product.name}
-            </h2>
-            <p className="font-body text-[12px] text-muted-foreground">
-              {product.nameKo}
-            </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h2 className="mb-1 font-pixel text-[12px] text-foreground sm:text-[14px]">
+                {product.name}
+              </h2>
+              <p className="font-body text-[12px] text-muted-foreground">
+                {product.nameKo}
+              </p>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <div className="flex items-baseline justify-end gap-2">
+                {discount > 0 && (
+                  <span className="font-pixel text-[12px] text-pixel-pink sm:text-[13px]">
+                    {discount}%
+                  </span>
+                )}
+                <span className="font-pixel text-[15px] text-foreground sm:text-[17px]">
+                  {product.price.toLocaleString()}
+                </span>
+                <span className="font-body text-[12px] text-muted-foreground">P</span>
+              </div>
+              {product.originalPrice && (
+                <p className="mt-1 font-body text-[12px] text-muted-foreground line-through">
+                  {product.originalPrice.toLocaleString()} P
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Tags */}
@@ -112,26 +133,6 @@ const ProductDetail = ({
             <span className="font-body text-[12px] bg-pixel-lavender text-foreground px-3 py-1 border-2 border-border">
               {product.category}
             </span>
-          </div>
-
-          {/* Price */}
-          <div className="bg-deep-void border-[3px] border-border p-4">
-            <div className="flex items-baseline gap-3">
-              {discount > 0 && (
-                <span className="font-pixel text-[12px] sm:text-[14px] text-pixel-pink">
-                  {discount}%
-                </span>
-              )}
-              <span className="font-pixel text-[14px] sm:text-[16px] text-foreground">
-                {product.price.toLocaleString()}
-              </span>
-              <span className="font-body text-[12px] text-muted-foreground">P</span>
-            </div>
-            {product.originalPrice && (
-              <p className="font-body text-[12px] text-muted-foreground line-through mt-1">
-                {product.originalPrice.toLocaleString()} P
-              </p>
-            )}
           </div>
 
           {/* Quantity Selector */}
@@ -163,17 +164,17 @@ const ProductDetail = ({
             <span className="font-body text-[12px] text-muted-foreground">합계</span>
             <div className="flex items-baseline gap-2">
               <Star className="w-4 h-4 text-pixel-yellow fill-pixel-yellow" />
-              <span className="font-pixel text-[14px] sm:text-[16px] text-foreground">
+              <span className="font-pixel text-[16px] sm:text-[18px] text-foreground">
                 {totalPrice.toLocaleString()}
               </span>
-              <span className="font-body text-[12px] text-muted-foreground">P</span>
+              <span className="font-body text-[13px] text-muted-foreground">P</span>
             </div>
           </div>
 
           {/* User Points Info */}
           <div className="flex items-center justify-between text-sm">
             <span className="font-body text-[12px] text-muted-foreground">보유 포인트</span>
-            <span className={`font-pixel text-[12px] sm:text-[14px] ${canAfford ? "text-foreground" : "text-pixel-pink"}`}>
+            <span className={`font-pixel text-[14px] sm:text-[16px] ${canAfford ? "text-foreground" : "text-pixel-pink"}`}>
               {userPoints.toLocaleString()} P
             </span>
           </div>

@@ -48,8 +48,8 @@ const CartPage = () => {
                       <div className="hidden sm:block space-y-1 text-right">
                         <p className="font-body text-[12px] text-muted-foreground">상품 금액</p>
                         <div className="flex items-baseline justify-end gap-2">
-                          <span className="font-pixel text-[13px] sm:text-[15px] text-foreground">{product.price.toLocaleString()}</span>
-                          <span className="font-body text-[12px] text-muted-foreground">P</span>
+                          <span className="font-pixel text-[15px] sm:text-[17px] text-foreground">{product.price.toLocaleString()}</span>
+                          <span className="font-body text-[13px] text-muted-foreground">P</span>
                         </div>
                       </div>
 
@@ -66,8 +66,8 @@ const CartPage = () => {
                       <div className="space-y-1 sm:hidden">
                         <p className="font-body text-[12px] text-muted-foreground">상품 금액</p>
                         <div className="flex items-baseline gap-2">
-                          <span className="font-pixel text-[13px] sm:text-[15px] text-foreground">{product.price.toLocaleString()}</span>
-                          <span className="font-body text-[12px] text-muted-foreground">P</span>
+                          <span className="font-pixel text-[15px] sm:text-[17px] text-foreground">{product.price.toLocaleString()}</span>
+                          <span className="font-body text-[13px] text-muted-foreground">P</span>
                         </div>
                       </div>
 
@@ -119,7 +119,7 @@ const CartPage = () => {
                   <span className="font-body text-[12px] text-muted-foreground">결제 금액</span>
                   <div className="flex items-center gap-2">
                     <Star className="h-4 w-4 text-pixel-yellow fill-pixel-yellow" />
-                    <span className="font-pixel text-[14px] sm:text-[16px] text-foreground">{cartTotal.toLocaleString()} P</span>
+                    <span className="font-pixel text-[16px] sm:text-[18px] text-foreground">{cartTotal.toLocaleString()} P</span>
                   </div>
                 </div>
               </div>
