@@ -19,6 +19,7 @@ const ShopHeader = () => {
   const { resolvedTheme, setTheme } = useTheme();
   const { cartCount, points } = useShop();
   const [mounted, setMounted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -47,7 +48,7 @@ const ShopHeader = () => {
             <span className="font-body text-[12px] text-muted-foreground ml-0.5">P</span>
           </div>
 
-          <DropdownMenu>
+          <DropdownMenu modal={false} open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
@@ -84,10 +85,12 @@ const ShopHeader = () => {
               <DropdownMenuItem
                 onSelect={() => {
                   if (isLoggedIn) {
+                    setIsMenuOpen(false);
                     void logout();
                     return;
                   }
 
+                  setIsMenuOpen(false);
                   openView("login");
                 }}
                 className="rounded-none px-2 py-2 font-body text-[13px] focus:bg-deep-void"
@@ -101,7 +104,10 @@ const ShopHeader = () => {
               </DropdownMenuItem>
 
               <DropdownMenuItem
-                onSelect={() => openView("cart")}
+                onSelect={() => {
+                  setIsMenuOpen(false);
+                  openView("cart");
+                }}
                 className="rounded-none px-2 py-2 font-body text-[13px] focus:bg-deep-void"
               >
                 <ShoppingCart className="mr-2 h-4 w-4 text-pixel-pink" />
@@ -109,7 +115,10 @@ const ShopHeader = () => {
               </DropdownMenuItem>
 
               <DropdownMenuItem
-                onSelect={() => openView("my")}
+                onSelect={() => {
+                  setIsMenuOpen(false);
+                  openView("my");
+                }}
                 className="rounded-none px-2 py-2 font-body text-[13px] focus:bg-deep-void"
               >
                 <UserRound className="mr-2 h-4 w-4 text-pixel-pink" />
@@ -119,7 +128,10 @@ const ShopHeader = () => {
               <DropdownMenuSeparator className="bg-border" />
 
               <DropdownMenuItem
-                onSelect={() => setTheme(isDark ? "light" : "dark")}
+                onSelect={() => {
+                  setIsMenuOpen(false);
+                  setTheme(isDark ? "light" : "dark");
+                }}
                 className="rounded-none px-2 py-2 font-body text-[13px] focus:bg-deep-void"
               >
                 <span className="flex items-center gap-2">
