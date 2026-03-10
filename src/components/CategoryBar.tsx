@@ -70,12 +70,14 @@ const CategoryBar = ({
   return (
     <div
       ref={barRef}
-      className={`sticky top-[7.25rem] sm:top-[8.25rem] z-30 bg-background border-b-[3px] border-border transition-transform duration-300 ease-out ${
-        isHiddenOnMobile ? "-translate-y-full sm:translate-y-0" : "translate-y-0"
+      className={`sticky top-[7.25rem] sm:top-[8.25rem] z-30 bg-background border-b-[3px] border-border will-change-[transform,opacity,margin-bottom] transition-[transform,opacity,margin-bottom] duration-500 ease-out ${
+        isHiddenOnMobile
+          ? "-translate-y-full opacity-0 sm:translate-y-0 sm:opacity-100 pointer-events-none sm:pointer-events-auto"
+          : "translate-y-0 opacity-100"
       }`}
       style={{
         marginBottom: isHiddenOnMobile ? `${-barHeight}px` : "0px",
-        transitionProperty: "transform, margin-bottom",
+        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
       }}
     >
       <div className="container">
