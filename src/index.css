@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@1.600/neodgm/style.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 250 20% 95%;
+    --foreground: 252 20% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 252 20% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 252 20% 15%;
+
+    --primary: 252 25% 35%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 350 100% 82%;
+    --secondary-foreground: 252 30% 15%;
+
+    --muted: 250 15% 90%;
+    --muted-foreground: 252 10% 45%;
+
+    --accent: 52 98% 55%;
+    --accent-foreground: 252 30% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 252 15% 85%;
+    --input: 252 15% 85%;
+    --ring: 350 100% 82%;
+
+    --radius: 0px;
+
+    --sidebar-background: 250 20% 97%;
+    --sidebar-foreground: 252 20% 15%;
+    --sidebar-primary: 350 100% 82%;
+    --sidebar-primary-foreground: 252 30% 15%;
+    --sidebar-accent: 250 15% 92%;
+    --sidebar-accent-foreground: 252 20% 15%;
+    --sidebar-border: 252 15% 88%;
+    --sidebar-ring: 350 100% 82%;
+
+    --pixel-pink: 350 100% 76%;
+    --pixel-yellow: 52 98% 50%;
+    --deep-void: 250 20% 92%;
+    --pixel-lavender: 270 30% 88%;
+
+    --font-pixel: 'NeoDunggeunmo', 'Press Start 2P', cursive;
+    --font-body: 'IBM Plex Sans KR', sans-serif;
+  }
+
+  .dark {
+    --background: 252 24% 10%;
+    --foreground: 42 35% 95%;
+
+    --card: 252 22% 14%;
+    --card-foreground: 42 35% 95%;
+
+    --popover: 252 22% 14%;
+    --popover-foreground: 42 35% 95%;
+
+    --primary: 350 95% 76%;
+    --primary-foreground: 252 24% 10%;
+
+    --secondary: 252 16% 20%;
+    --secondary-foreground: 42 35% 95%;
+
+    --muted: 252 16% 18%;
+    --muted-foreground: 252 8% 70%;
+
+    --accent: 52 92% 58%;
+    --accent-foreground: 252 24% 10%;
+
+    --destructive: 0 72% 52%;
+    --destructive-foreground: 42 35% 95%;
+
+    --border: 252 14% 26%;
+    --input: 252 14% 26%;
+    --ring: 350 95% 76%;
+
+    --sidebar-background: 252 24% 12%;
+    --sidebar-foreground: 42 35% 95%;
+    --sidebar-primary: 350 95% 76%;
+    --sidebar-primary-foreground: 252 24% 10%;
+    --sidebar-accent: 252 16% 20%;
+    --sidebar-accent-foreground: 42 35% 95%;
+    --sidebar-border: 252 14% 24%;
+    --sidebar-ring: 350 95% 76%;
+
+    --pixel-pink: 350 95% 76%;
+    --pixel-yellow: 52 92% 58%;
+    --deep-void: 252 18% 18%;
+    --pixel-lavender: 270 26% 36%;
+  }
+}
+
+@layer base {
+  html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    font-size: 15px;
+    image-rendering: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-pixel);
+    letter-spacing: 0px;
+  }
+}
+
+@keyframes stagger-up {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes modal-in {
+  0% { opacity: 0; transform: scale(0.95) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes overlay-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes toast-slide-in-right {
+  0% { opacity: 0; transform: translateX(48px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toast-slide-out-right {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(48px); }
+}
+
+@keyframes announcement-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@layer utilities {
+  .font-pixel {
+    font-family: var(--font-pixel);
+    letter-spacing: 0px;
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .pixel-border {
+    border: 3px solid hsl(var(--border));
+    image-rendering: pixelated;
+  }
+
+  .pixel-border-pink {
+    border: 3px solid hsl(var(--pixel-pink));
+  }
+
+  .pixel-border-yellow {
+    border: 3px solid hsl(var(--pixel-yellow));
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+  .shop-toast[data-mounted="true"] {
+    animation: toast-slide-in-right 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .shop-toast[data-removed="true"] {
+    animation: toast-slide-out-right 0.24s ease-in forwards;
+  }
+
+  .announcement-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: announcement-marquee 20s linear infinite;
+    text-shadow: 0 0 1px rgba(122, 74, 0, 0.2), 0 0 4px rgba(255, 196, 72, 0.18);
+    will-change: transform;
+  }
+
+  .dark .announcement-marquee-track {
+    text-shadow: 0 0 3px rgba(255, 217, 92, 0.45), 0 0 8px rgba(255, 217, 92, 0.4), 0 0 14px rgba(255, 128, 0, 0.22);
+  }
+
+  .announcement-marquee-item {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding-right: 3rem;
+  }
+}
+
+/* Pixel-style scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border: 2px solid hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--pixel-pink));
+}
