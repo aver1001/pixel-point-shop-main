@@ -7,12 +7,29 @@ type ShopEntry = {
   quantity: number;
 };
 
+type OrderItem = {
+  productId: number;
+  name: string;
+  nameKo: string;
+  price: number;
+  quantity: number;
+};
+
+type OrderHistoryEntry = {
+  id: string;
+  orderedAt: string;
+  total: number;
+  totalQuantity: number;
+  items: OrderItem[];
+};
+
 type ShopContextValue = {
   points: number;
   cartItems: ShopEntry[];
   cartCount: number;
   cartTotal: number;
   totalSpent: number;
+  orderHistory: OrderHistoryEntry[];
   addToCart: (product: Product, quantity?: number) => boolean;
   updateCartItemQuantity: (productId: number, quantity: number) => void;
   removeFromCart: (productId: number) => void;
@@ -39,6 +56,7 @@ export const ShopProvider = ({ children }: { children: React.ReactNode }) => {
   const [points, setPoints] = useState(500);
   const [cartItems, setCartItems] = useState<ShopEntry[]>([]);
   const [totalSpent, setTotalSpent] = useState(0);
+  const [orderHistory, setOrderHistory] = useState<OrderHistoryEntry[]>([]);
 
   const addToCart = useCallback((product: Product, quantity: number = 1) => {
     setCartItems((prev) => mergeItem(prev, product, quantity));
@@ -86,9 +104,24 @@ export const ShopProvider = ({ children }: { children: React.ReactNode }) => {
 
     setPoints((prev) => prev - total);
     setTotalSpent((prev) => prev + total);
-    setCartItems([]);
-
     const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+    const newOrder: OrderHistoryEntry = {
+      id: `ORD-${Date.now()}`,
+      orderedAt: new Date().toISOString(),
+      total,
+      totalQuantity,
+      items: cartItems.map((item) => ({
+        productId: item.product.id,
+        name: item.product.name,
+        nameKo: item.product.nameKo,
+        price: item.product.price,
+        quantity: item.quantity,
+      })),
+    };
+
+    setOrderHistory((prev) => [newOrder, ...prev]);
+    setCartItems([]);
 
     toast.success("결제가 완료되었습니다!", {
       description: `${totalQuantity}개 상품 / ${total.toLocaleString()}P 사용`,
@@ -107,12 +140,13 @@ export const ShopProvider = ({ children }: { children: React.ReactNode }) => {
       cartCount,
       cartTotal,
       totalSpent,
+      orderHistory,
       addToCart,
       updateCartItemQuantity,
       removeFromCart,
       checkoutCart,
     };
-  }, [addToCart, cartItems, checkoutCart, points, removeFromCart, totalSpent, updateCartItemQuantity]);
+  }, [addToCart, cartItems, checkoutCart, orderHistory, points, removeFromCart, totalSpent, updateCartItemQuantity]);
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 };

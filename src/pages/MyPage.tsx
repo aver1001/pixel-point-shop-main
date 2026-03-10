@@ -1,12 +1,12 @@
 import { useAppView } from "@/components/app-view-provider";
-import { ShoppingCart, Star, UserRound } from "lucide-react";
+import { Star, UserRound } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { useShop } from "@/components/shop-provider";
 
 const MyPage = () => {
   const { checkoutComplete, openView } = useAppView();
   const { isLoggedIn, logout, user } = useAuth();
-  const { cartCount, points, totalSpent } = useShop();
+  const { cartCount, points, totalSpent, orderHistory } = useShop();
 
   return (
     <main className="container px-4 py-6 space-y-6">
@@ -51,7 +51,7 @@ const MyPage = () => {
               <button
                 type="button"
                 onClick={() => openView("login")}
-                className="border-[3px] border-border bg-pixel-yellow px-4 py-2 text-center font-pixel text-[12px] text-card hover:brightness-105"
+                className="border-[3px] border-border bg-pixel-pink px-4 py-2 text-center font-pixel text-[12px] text-card hover:brightness-110"
               >
                 로그인
               </button>
@@ -92,17 +92,46 @@ const MyPage = () => {
         </section>
 
         <section className="border-[3px] border-border bg-card p-5">
-          <h3 className="font-pixel text-[12px] sm:text-[14px] text-foreground">QUICK MOVE</h3>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <button type="button" onClick={() => openView("cart")} className="flex items-center gap-2 border-[3px] border-border bg-deep-void px-4 py-3 font-body text-[12px] text-foreground hover:border-pixel-pink">
-              <ShoppingCart className="h-4 w-4 text-pixel-pink" />
-              장바구니 보기
-            </button>
-            <button type="button" onClick={() => openView("shop")} className="flex items-center gap-2 border-[3px] border-border bg-pixel-pink px-4 py-3 font-body text-[12px] text-card hover:brightness-110">
-              <Star className="h-4 w-4 text-card fill-card" />
-              쇼핑 계속하기
-            </button>
-          </div>
+          <h3 className="font-pixel text-[12px] sm:text-[14px] text-foreground">ORDER HISTORY</h3>
+          {orderHistory.length > 0 ? (
+            <div className="mt-4 space-y-3">
+              {orderHistory.map((order) => (
+                <article key={order.id} className="border-[3px] border-border bg-deep-void p-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b-[3px] border-border pb-2">
+                    <p className="font-pixel text-[11px] text-foreground">{order.id}</p>
+                    <p className="font-body text-[12px] text-muted-foreground">
+                      {new Date(order.orderedAt).toLocaleString("ko-KR", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+
+                  <ul className="mt-3 space-y-1.5">
+                    {order.items.map((item) => (
+                      <li key={`${order.id}-${item.productId}`} className="flex items-center justify-between gap-2">
+                        <p className="min-w-0 truncate font-body text-[12px] text-foreground">
+                          {item.nameKo}
+                          <span className="ml-1 text-muted-foreground">x{item.quantity}</span>
+                        </p>
+                        <p className="font-pixel text-[12px] text-foreground">{(item.price * item.quantity).toLocaleString()} P</p>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-3 flex items-center justify-between border-t-[3px] border-border pt-2">
+                    <p className="font-body text-[12px] text-muted-foreground">총 {order.totalQuantity}개</p>
+                    <p className="font-pixel text-[14px] text-foreground">{order.total.toLocaleString()} P</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 font-body text-[12px] text-muted-foreground">아직 주문 내역이 없습니다. 장바구니에서 결제하면 여기에 표시됩니다.</p>
+          )}
         </section>
         </div>
       </main>
