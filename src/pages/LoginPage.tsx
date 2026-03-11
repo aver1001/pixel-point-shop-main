@@ -33,7 +33,14 @@ const LoginPage = () => {
                     <UserRound className="h-8 w-8 text-pixel-pink" />
                   </div>
                   <div>
-                    <p className="font-pixel text-[12px] sm:text-[14px] text-foreground">{user?.displayName ?? "SHOP USER"}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-pixel text-[12px] sm:text-[14px] text-foreground">{user?.displayName ?? "SHOP USER"}</p>
+                      {user?.role === "admin" && (
+                        <span className="border-[2px] border-pixel-pink bg-pixel-pink/15 px-2 py-0.5 font-pixel text-[10px] text-pixel-pink">
+                          ADMIN
+                        </span>
+                      )}
+                    </div>
                     <p className="mt-1 font-body text-[12px] text-muted-foreground">@{user?.username}</p>
                   </div>
                 </div>

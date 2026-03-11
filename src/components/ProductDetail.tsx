@@ -1,6 +1,7 @@
 import { X, Star, ShoppingCart, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import type { Product } from "@/data/products";
+import { getSalePriceFromDiscount, normalizeDiscountPercent } from "@/lib/product-pricing";
 
 const ProductDetail = ({
   product,
@@ -14,10 +15,9 @@ const ProductDetail = ({
   userPoints: number;
 }) => {
   const [quantity, setQuantity] = useState(1);
-  const discount = product.originalPrice
-    ? Math.round((1 - product.price / product.originalPrice) * 100)
-    : 0;
-  const totalPrice = product.price * quantity;
+  const discount = normalizeDiscountPercent(product.discountPercent);
+  const salePrice = getSalePriceFromDiscount(product.price, discount);
+  const totalPrice = salePrice * quantity;
   const canAfford = userPoints >= totalPrice;
 
   return (
@@ -48,25 +48,17 @@ const ProductDetail = ({
         </button>
 
         {/* Image */}
-        <div className="relative bg-deep-void flex items-center justify-center p-8 sm:p-12">
+        <div className="relative aspect-square bg-deep-void overflow-hidden">
           {/* Tags */}
           <div className="absolute top-0 left-0 flex gap-0">
             {product.isHot && (
-              <span className="bg-pixel-pink text-card font-pixel text-[12px] px-3 py-1.5">
+              <span className="bg-pixel-pink text-black font-pixel text-[12px] px-3 py-1.5">
                 HOT
               </span>
             )}
             {product.isNew && (
-              <span className="bg-pixel-yellow text-card font-pixel text-[12px] px-3 py-1.5">
+              <span className="bg-pixel-yellow text-black font-pixel text-[12px] px-3 py-1.5">
                 NEW
-              </span>
-            )}
-            {product.isLimited && (
-              <span
-                className="bg-accent text-accent-foreground font-pixel text-[12px] px-3 py-1.5"
-                style={{ animation: "bounce-subtle 2s ease-in-out infinite" }}
-              >
-                한정판
               </span>
             )}
           </div>
@@ -74,7 +66,7 @@ const ProductDetail = ({
           <img
             src={product.image}
             alt={product.nameKo}
-            className="w-48 h-48 sm:w-56 sm:h-56 object-contain"
+            className="h-full w-full object-cover"
           />
 
           {/* Stock Warning */}
@@ -108,28 +100,22 @@ const ProductDetail = ({
                   </span>
                 )}
                 <span className="font-pixel text-[15px] text-foreground sm:text-[17px]">
-                  {product.price.toLocaleString()}
+                  {salePrice.toLocaleString()}
                 </span>
                 <span className="font-body text-[12px] text-muted-foreground">P</span>
               </div>
-              {product.originalPrice && (
+              {discount > 0 && (
                 <p className="mt-1 font-body text-[12px] text-muted-foreground line-through">
-                  {product.originalPrice.toLocaleString()} P
+                  {product.price.toLocaleString()} P
                 </p>
               )}
             </div>
           </div>
 
-          {/* Tags */}
           <div className="flex flex-wrap gap-2">
-            {product.tags.map((tag) => (
-              <span
-                key={tag}
-                className="font-body text-[12px] bg-deep-void text-muted-foreground px-3 py-1 border-2 border-border"
-              >
-                #{tag}
-              </span>
-            ))}
+            <span className="font-body text-[12px] bg-deep-void text-muted-foreground px-3 py-1 border-2 border-border">
+              작품명 {product.name}
+            </span>
             <span className="font-body text-[12px] bg-pixel-lavender text-foreground px-3 py-1 border-2 border-border">
               {product.category}
             </span>

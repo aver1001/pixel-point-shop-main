@@ -2,6 +2,17 @@ import { useState } from "react";
 import { useAppView } from "@/components/app-view-provider";
 import { Minus, Plus, ShoppingCart, Star, Trash2 } from "lucide-react";
 import { useShop } from "@/components/shop-provider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { getSalePriceFromDiscount } from "@/lib/product-pricing";
 
 const CartPage = () => {
   const {
@@ -15,7 +26,29 @@ const CartPage = () => {
   } = useShop();
   const { openView } = useAppView();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isCheckoutConfirmOpen, setIsCheckoutConfirmOpen] = useState(false);
   const canCheckout = cartItems.length > 0 && points >= cartTotal;
+  const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const checkoutTargetLabel =
+    cartItems.length === 1
+      ? `${cartItems[0].product.nameKo} 상품 ${cartItems[0].quantity}개`
+      : `${cartItems[0].product.nameKo} x${cartItems[0].quantity} 외 ${totalQuantity - cartItems[0].quantity}개 상품`;
+
+  const handleCheckout = () => {
+    if (isCheckingOut) {
+      return;
+    }
+
+    setIsCheckingOut(true);
+    setIsCheckoutConfirmOpen(false);
+
+    if (checkoutCart()) {
+      openView("my", { checkoutComplete: true });
+      return;
+    }
+
+    setIsCheckingOut(false);
+  };
 
   return (
     <main className="container px-4 py-6 space-y-6">
@@ -34,10 +67,14 @@ const CartPage = () => {
             <section className="space-y-4">
               {cartItems.map(({ product, quantity }) => (
                 <article key={product.id} className="grid grid-cols-[84px_1fr] gap-3 border-[3px] border-border bg-card p-3 sm:grid-cols-[96px_1fr_auto] sm:items-center sm:gap-4 sm:p-4">
-                  <div className="aspect-square bg-deep-void p-2 sm:p-3 flex items-center justify-center">
-                    <img src={product.image} alt={product.nameKo} className="h-full w-full object-contain" />
+                  <div className="aspect-square overflow-hidden bg-deep-void">
+                    <img src={product.image} alt={product.nameKo} className="h-full w-full object-cover" />
                   </div>
 
+                  {(() => {
+                    const salePrice = getSalePriceFromDiscount(product.price, product.discountPercent);
+
+                    return (
                   <div className="min-w-0 space-y-2 sm:space-y-1">
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -48,9 +85,12 @@ const CartPage = () => {
                       <div className="hidden sm:block space-y-1 text-right">
                         <p className="font-body text-[12px] text-muted-foreground">상품 금액</p>
                         <div className="flex items-baseline justify-end gap-2">
-                          <span className="font-pixel text-[15px] sm:text-[17px] text-foreground">{product.price.toLocaleString()}</span>
+                          <span className="font-pixel text-[15px] sm:text-[17px] text-foreground">{salePrice.toLocaleString()}</span>
                           <span className="font-body text-[13px] text-muted-foreground">P</span>
                         </div>
+                        {(product.discountPercent ?? 0) > 0 && (
+                          <p className="font-body text-[12px] text-muted-foreground line-through">{product.price.toLocaleString()} P</p>
+                        )}
                       </div>
 
                       <button
@@ -66,9 +106,12 @@ const CartPage = () => {
                       <div className="space-y-1 sm:hidden">
                         <p className="font-body text-[12px] text-muted-foreground">상품 금액</p>
                         <div className="flex items-baseline gap-2">
-                          <span className="font-pixel text-[15px] sm:text-[17px] text-foreground">{product.price.toLocaleString()}</span>
+                          <span className="font-pixel text-[15px] sm:text-[17px] text-foreground">{salePrice.toLocaleString()}</span>
                           <span className="font-body text-[13px] text-muted-foreground">P</span>
                         </div>
+                        {(product.discountPercent ?? 0) > 0 && (
+                          <p className="font-body text-[12px] text-muted-foreground line-through">{product.price.toLocaleString()} P</p>
+                        )}
                       </div>
 
                       <div className="flex items-center border-[3px] border-border bg-background">
@@ -92,6 +135,8 @@ const CartPage = () => {
                       </div>
                     </div>
                   </div>
+                    );
+                  })()}
 
                   <button
                     type="button"
@@ -134,18 +179,11 @@ const CartPage = () => {
                 type="button"
                 disabled={!canCheckout || isCheckingOut}
                 onClick={() => {
-                  if (isCheckingOut) {
+                  if (!canCheckout || isCheckingOut) {
                     return;
                   }
 
-                  setIsCheckingOut(true);
-
-                  if (checkoutCart()) {
-                    openView("my", { checkoutComplete: true });
-                    return;
-                  }
-
-                  setIsCheckingOut(false);
+                  setIsCheckoutConfirmOpen(true);
                 }}
                 className={`w-full border-[3px] border-border px-4 py-3 font-pixel text-[12px] sm:text-[14px] transition-all ${
                   canCheckout && !isCheckingOut
@@ -155,6 +193,33 @@ const CartPage = () => {
               >
                 {isCheckingOut ? "PROCESSING..." : "CHECK OUT"}
               </button>
+
+              <AlertDialog open={isCheckoutConfirmOpen} onOpenChange={setIsCheckoutConfirmOpen}>
+                <AlertDialogContent className="rounded-none border-[3px] border-border bg-card p-5 shadow-none sm:max-w-md">
+                  <AlertDialogHeader className="space-y-3 text-left">
+                    <AlertDialogTitle className="font-pixel text-[12px] text-foreground sm:text-[14px]">
+                      ORDER CONFIRM
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="font-body text-[12px] leading-relaxed text-muted-foreground">
+                      <span className="block">{checkoutTargetLabel} 주문 하시겠습니까?</span>
+                      <span className="mt-1 block text-foreground">
+                        총 {totalQuantity}개 / {cartTotal.toLocaleString()} P 사용
+                      </span>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="mt-1 gap-2">
+                    <AlertDialogCancel className="mt-0 rounded-none border-[3px] border-border bg-deep-void px-4 py-2 font-pixel text-[11px] text-foreground hover:border-pixel-pink hover:bg-deep-void">
+                      취소
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleCheckout}
+                      className="rounded-none border-[3px] border-border bg-pixel-pink px-4 py-2 font-pixel text-[11px] text-card hover:brightness-110"
+                    >
+                      주문하기
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
 
               <button
                 type="button"

@@ -3,6 +3,11 @@ import { toast } from "sonner";
 
 const USERS_STORAGE_KEY = "azel-point-shop-users";
 const SESSION_STORAGE_KEY = "azel-point-shop-session";
+const ADMIN_USER_ID = "admin-account";
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "admin1234";
+
+type UserRole = "admin" | "user";
 
 type StoredUser = {
   id: string;
@@ -10,13 +15,15 @@ type StoredUser = {
   displayName: string;
   password: string;
   createdAt: string;
+  role?: UserRole;
 };
 
-type AuthUser = {
+export type AuthUser = {
   id: string;
   username: string;
   displayName: string;
   createdAt: string;
+  role: UserRole;
 };
 
 type LoginPayload = {
@@ -33,6 +40,7 @@ type SignupPayload = {
 type AuthContextValue = {
   isReady: boolean;
   isLoggedIn: boolean;
+  isAdmin: boolean;
   isSubmitting: boolean;
   user: AuthUser | null;
   login: (payload: LoginPayload) => Promise<boolean>;
@@ -41,6 +49,14 @@ type AuthContextValue = {
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+const ADMIN_USER: AuthUser = {
+  id: ADMIN_USER_ID,
+  username: ADMIN_USERNAME,
+  displayName: "ADMIN",
+  createdAt: "2026-03-11T00:00:00.000Z",
+  role: "admin",
+};
 
 const readUsers = (): StoredUser[] => {
   if (typeof window === "undefined") {
@@ -69,7 +85,13 @@ const normalizeUser = (user: StoredUser): AuthUser => ({
   username: user.username,
   displayName: user.displayName,
   createdAt: user.createdAt,
+  role: user.role ?? "user",
 });
+
+export const getRegisteredUsers = (): AuthUser[] =>
+  readUsers()
+    .map(normalizeUser)
+    .filter((user) => user.role === "user");
 
 const createUserId = () => {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -94,6 +116,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const sessionUserId = window.localStorage.getItem(SESSION_STORAGE_KEY);
 
     if (sessionUserId) {
+      if (sessionUserId === ADMIN_USER_ID) {
+        setUser(ADMIN_USER);
+        setIsReady(true);
+        return;
+      }
+
       const existingUser = users.find((item) => item.id === sessionUserId);
 
       if (existingUser) {
@@ -117,6 +145,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsSubmitting(true);
 
     try {
+      if (normalizedUsername.toLowerCase() === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        window.localStorage.setItem(SESSION_STORAGE_KEY, ADMIN_USER_ID);
+        setUser(ADMIN_USER);
+        toast.success("관리자 로그인이 완료되었습니다!");
+        return true;
+      }
+
       const users = readUsers();
       const existingUser = users.find(
         (item) => item.username.toLowerCase() === normalizedUsername.toLowerCase(),
@@ -162,7 +197,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         (item) => item.username.toLowerCase() === normalizedUsername.toLowerCase(),
       );
 
-      if (duplicate) {
+      if (duplicate || normalizedUsername.toLowerCase() === ADMIN_USERNAME) {
         toast.error("이미 사용 중인 아이디입니다.");
         return false;
       }
@@ -173,6 +208,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         displayName: normalizedDisplayName,
         password,
         createdAt: new Date().toISOString(),
+        role: "user",
       };
 
       const nextUsers = [...users, newUser];
@@ -200,6 +236,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     () => ({
       isReady,
       isLoggedIn: Boolean(user),
+      isAdmin: user?.role === "admin",
       isSubmitting,
       user,
       login,

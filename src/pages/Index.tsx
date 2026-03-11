@@ -1,23 +1,36 @@
 import { useMemo, useState } from "react";
+import { Drama } from "lucide-react";
 import AnnouncementBoard from "@/components/AnnouncementBoard";
+import { useAppView } from "@/components/app-view-provider";
+import { useProduct } from "@/components/product-provider";
 import { useShop } from "@/components/shop-provider";
 import CategoryBar from "@/components/CategoryBar";
 import ProductCard from "@/components/ProductCard";
 import ProductDetail from "@/components/ProductDetail";
-import { products, type Product } from "@/data/products";
+import type { Product } from "@/data/products";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { shopSearchQuery } = useAppView();
   const { points, addToCart } = useShop();
+  const { products } = useProduct();
 
   const filteredProducts = useMemo(() => {
-    if (selectedCategory === "all") return products;
-    if (selectedCategory === "한정판") return products.filter((p) => p.isLimited);
-    if (selectedCategory === "신상품") return products.filter((p) => p.isNew);
-    if (selectedCategory === "세일") return products.filter((p) => p.originalPrice);
-    return products.filter((p) => p.category === selectedCategory);
-  }, [selectedCategory]);
+    const normalizedSearch = shopSearchQuery.trim().toLowerCase();
+
+    const categoryFiltered = selectedCategory === "all"
+      ? products
+      : products.filter((p) => p.category === selectedCategory);
+
+    if (!normalizedSearch) {
+      return categoryFiltered;
+    }
+
+    return categoryFiltered.filter((product) =>
+      [product.name, product.nameKo].some((value) => value.toLowerCase().includes(normalizedSearch)),
+    );
+  }, [products, selectedCategory, shopSearchQuery]);
 
   return (
     <>
@@ -33,7 +46,7 @@ const Index = () => {
               <span className="text-pixel-yellow">★</span>
               <h2 className="font-pixel text-[12px] sm:text-[14px] text-foreground">
                 {selectedCategory === "all"
-                  ? "BEST & NEW"
+                  ? "PRODUCT LIST"
                   : selectedCategory.toUpperCase()}
               </h2>
             </div>
@@ -56,7 +69,7 @@ const Index = () => {
 
         {filteredProducts.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20">
-            <span className="font-pixel text-2xl mb-4">🎭</span>
+            <Drama className="mb-4 h-8 w-8 text-muted-foreground" aria-hidden="true" />
             <p className="font-pixel text-[12px] sm:text-[14px] text-muted-foreground">
               상품이 없습니다
             </p>

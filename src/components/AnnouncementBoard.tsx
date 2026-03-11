@@ -1,15 +1,10 @@
 import { useAppView } from "@/components/app-view-provider";
-
-export const notices = [
-  "[NOTICE] 신규 회원 가입 시 바로 쇼핑 가능",
-  "[EVENT] 장바구니 결제 후 마이페이지에서 상태 확인",
-  "[UPDATE] AZEL POINT SHOP 운영 시간 10:00 - 19:00",
-];
-
-const marqueeText = `${notices.join("   ✦   ")}   ✦   `;
+import { useNotice } from "@/components/notice-provider";
 
 const AnnouncementBoard = () => {
   const { openView } = useAppView();
+  const { notices } = useNotice();
+  const marqueeText = `${notices.map((notice) => notice.title).join("   ✦   ")}   ✦   `;
 
   return (
     <section className="sticky top-16 sm:top-20 z-40 border-b-[3px] border-border bg-deep-void">

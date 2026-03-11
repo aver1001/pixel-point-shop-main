@@ -13,14 +13,21 @@ export type Product = {
   name: string;
   nameKo: string;
   price: number;
-  originalPrice?: number;
+  discountPercent?: number;
   image: string;
   category: string;
-  tags: string[];
   isNew?: boolean;
   isHot?: boolean;
-  isLimited?: boolean;
   stock: number;
+};
+
+export type CategoryId = "all" | "피규어" | "굿즈";
+export type CategoryIconKey = "sparkles" | "drama" | "gift";
+
+export type Category = {
+  id: CategoryId;
+  name: string;
+  iconKey: CategoryIconKey;
 };
 
 export const products: Product[] = [
@@ -28,11 +35,10 @@ export const products: Product[] = [
     id: 1,
     name: "PIXEL KNIGHT",
     nameKo: "픽셀 나이트 피규어",
-    price: 35,
-    originalPrice: 50,
+    price: 50,
+    discountPercent: 30,
     image: product1,
     category: "피규어",
-    tags: ["판타지", "기사"],
     isHot: true,
     stock: 12,
   },
@@ -43,7 +49,6 @@ export const products: Product[] = [
     price: 22,
     image: product2,
     category: "피규어",
-    tags: ["동물", "고양이"],
     isNew: true,
     stock: 25,
   },
@@ -51,11 +56,10 @@ export const products: Product[] = [
     id: 3,
     name: "MECHA UNIT-01",
     nameKo: "메카 유닛-01 피규어",
-    price: 89,
-    originalPrice: 120,
+    price: 120,
+    discountPercent: 26,
     image: product3,
     category: "피규어",
-    tags: ["SF", "로봇"],
     isHot: true,
     stock: 5,
   },
@@ -66,7 +70,6 @@ export const products: Product[] = [
     price: 65,
     image: product4,
     category: "피규어",
-    tags: ["전사", "일본"],
     stock: 18,
   },
   {
@@ -76,7 +79,6 @@ export const products: Product[] = [
     price: 42,
     image: product5,
     category: "굿즈",
-    tags: ["인형", "드래곤"],
     isNew: true,
     stock: 30,
   },
@@ -84,12 +86,10 @@ export const products: Product[] = [
     id: 6,
     name: "WITCH LUNA",
     nameKo: "위치 루나 피규어",
-    price: 58,
-    originalPrice: 75,
+    price: 75,
+    discountPercent: 23,
     image: product6,
     category: "피규어",
-    tags: ["마법", "마녀"],
-    isLimited: true,
     stock: 3,
   },
   {
@@ -99,7 +99,6 @@ export const products: Product[] = [
     price: 72,
     image: product7,
     category: "피규어",
-    tags: ["요괴", "여우"],
     isHot: true,
     stock: 8,
   },
@@ -110,7 +109,6 @@ export const products: Product[] = [
     price: 48,
     image: product8,
     category: "피규어",
-    tags: ["천사", "판타지"],
     isNew: true,
     stock: 15,
   },
@@ -118,20 +116,29 @@ export const products: Product[] = [
     id: 9,
     name: "CAPTAIN BONES",
     nameKo: "캡틴 본즈 피규어",
-    price: 55,
-    originalPrice: 80,
+    price: 80,
+    discountPercent: 31,
     image: product9,
     category: "피규어",
-    tags: ["해적", "모험"],
     stock: 10,
   },
 ];
 
-export const categories = [
-  { id: "all", name: "전체", icon: "⭐" },
-  { id: "피규어", name: "피규어", icon: "🎭" },
-  { id: "굿즈", name: "굿즈", icon: "🎁" },
-  { id: "한정판", name: "한정판", icon: "🔥" },
-  { id: "신상품", name: "신상품", icon: "✨" },
-  { id: "세일", name: "세일", icon: "💰" },
+export const defaultSeriesOptions = [
+  "원피스",
+  "나루토",
+  "귀멸의 칼날",
+  "주술회전",
+  "진격의 거인",
+  "하이큐!!",
+  "체인소 맨",
+  "스파이 패밀리",
+  "포켓몬",
+  "블루 록",
+];
+
+export const categories: Category[] = [
+  { id: "all", name: "전체", iconKey: "sparkles" },
+  { id: "피규어", name: "피규어", iconKey: "drama" },
+  { id: "굿즈", name: "굿즈", iconKey: "gift" },
 ];

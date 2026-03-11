@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Product } from "@/data/products";
+import { getSalePriceFromDiscount, normalizeDiscountPercent } from "@/lib/product-pricing";
 
 const ProductCard = ({
   product,
@@ -13,9 +14,8 @@ const ProductCard = ({
   onOpenDetail: (product: Product) => void;
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const discount = product.originalPrice
-    ? Math.round((1 - product.price / product.originalPrice) * 100)
-    : 0;
+  const discount = normalizeDiscountPercent(product.discountPercent);
+  const salePrice = getSalePriceFromDiscount(product.price, discount);
   const openDetail = () => onOpenDetail(product);
 
   return (
@@ -27,32 +27,26 @@ const ProductCard = ({
       }}
     >
       <button type="button" className="flex flex-1 flex-col text-left" onClick={openDetail}>
-        {/* Tags */}
         <div className="relative">
           <div className="absolute top-0 left-0 z-10 flex gap-0">
             {product.isHot && (
-              <span className="bg-pixel-pink text-card font-pixel text-[10px] px-2 py-0.5">
+              <span className="bg-pixel-pink px-2 py-0.5 font-pixel text-[10px] text-black">
                 HOT
               </span>
             )}
             {product.isNew && (
-              <span className="bg-pixel-yellow text-card font-pixel text-[10px] px-2 py-0.5">
+              <span className="bg-pixel-yellow px-2 py-0.5 font-pixel text-[10px] text-black">
                 NEW
-              </span>
-            )}
-            {product.isLimited && (
-              <span className="bg-accent text-accent-foreground font-pixel text-[10px] px-2 py-0.5" style={{ animation: 'bounce-subtle 2s ease-in-out infinite' }}>
-                한정판
               </span>
             )}
           </div>
 
           {/* Image */}
-          <div className="aspect-square bg-deep-void flex items-center justify-center overflow-hidden p-3">
+          <div className="aspect-square bg-deep-void flex items-center justify-center overflow-hidden">
             <img
               src={product.image}
               alt={product.nameKo}
-              className={`w-full h-full object-contain transition-all duration-700 group-hover:scale-110 ${
+              className={`h-full w-full object-cover transition-all duration-700 group-hover:scale-110 ${
                 imageLoaded ? "opacity-100" : "opacity-0 blur-md"
               }`}
               style={{ imageRendering: "auto" }}
@@ -69,8 +63,8 @@ const ProductCard = ({
 
           {/* Stock Warning */}
           {product.stock <= 5 && (
-            <div className="absolute bottom-0 left-0 right-0 bg-pixel-yellow/90 px-2 py-1">
-              <span className="font-pixel text-[10px] text-accent-foreground">
+            <div className="absolute bottom-2 right-2 z-10 rounded border-[2px] border-border/70 bg-pixel-yellow/90 px-2 py-0.5 backdrop-blur-sm">
+              <span className="font-pixel text-[10px] leading-none text-accent-foreground">
                 잔여 {product.stock}개
               </span>
             </div>
@@ -95,13 +89,13 @@ const ProductCard = ({
                 </span>
               )}
               <span className="font-pixel text-[14px] sm:text-[16px] text-foreground">
-                {product.price.toLocaleString()}
+                {salePrice.toLocaleString()}
               </span>
               <span className="font-body text-[12px] text-muted-foreground">P</span>
             </div>
-            {product.originalPrice && (
+            {discount > 0 && (
               <p className="font-body text-[12px] text-muted-foreground line-through">
-                {product.originalPrice.toLocaleString()} P
+                {product.price.toLocaleString()} P
               </p>
             )}
           </div>

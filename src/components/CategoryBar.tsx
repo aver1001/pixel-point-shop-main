@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { Drama, Gift, Sparkles, type LucideIcon } from "lucide-react";
 import { categories } from "@/data/products";
+
+const categoryIconMap: Record<(typeof categories)[number]["iconKey"], LucideIcon> = {
+  sparkles: Sparkles,
+  drama: Drama,
+  gift: Gift,
+};
 
 const CategoryBar = ({
   selected,
@@ -83,21 +90,25 @@ const CategoryBar = ({
       <div className="container">
         <div className="mx-auto max-w-[960px]">
           <div className="grid grid-cols-3 gap-x-3 gap-y-1 px-3 py-2 sm:flex sm:overflow-x-auto sm:gap-0 sm:px-10 sm:py-0 lg:px-14 scrollbar-hide">
-            {categories.map((cat) => (
-              <button
-                type="button"
-                key={cat.id}
-                onClick={() => onSelect(cat.id)}
-                className={`flex min-w-0 items-center justify-center gap-1.5 px-2 py-3 font-pixel text-[13px] text-center transition-colors sm:min-w-max sm:flex-1 sm:gap-2 sm:px-4 sm:text-[16px] whitespace-nowrap border-b-[3px] ${
-                  selected === cat.id
-                    ? "text-pixel-pink border-pixel-pink"
-                    : "text-muted-foreground border-transparent hover:text-foreground"
-                }`}
-              >
-                <span>{cat.icon}</span>
-                <span>{cat.name}</span>
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const Icon = categoryIconMap[cat.iconKey];
+
+              return (
+                <button
+                  type="button"
+                  key={cat.id}
+                  onClick={() => onSelect(cat.id)}
+                  className={`flex min-w-0 items-center justify-center gap-1.5 px-2 py-3 font-pixel text-[13px] text-center transition-colors sm:min-w-max sm:flex-1 sm:gap-2 sm:px-4 sm:text-[16px] whitespace-nowrap border-b-[3px] ${
+                    selected === cat.id
+                      ? "text-pixel-pink border-pixel-pink"
+                      : "text-muted-foreground border-transparent hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+                  <span>{cat.name}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
